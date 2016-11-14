@@ -16,7 +16,7 @@ import junitparams.internal.ParameterisedTestClassRunner;
 import junitparams.internal.ParametrizedTestMethodsFilter;
 import junitparams.internal.TestMethod;
 
-import static org.junit.internal.runners.rules.*;
+import static org.junit.internal.runners.rules.RuleFieldValidator.RULE_VALIDATOR;
 
 /**
  * <h1>JUnitParams</h1><br>
