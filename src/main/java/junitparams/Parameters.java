@@ -1,6 +1,5 @@
 package junitparams;
 
-import javax.lang.model.type.NullType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -33,7 +32,7 @@ public @interface Parameters {
      * contains parameter values in its elements.
      * Example: <code>@Parameters(source = PeopleProvider.class)</code>
      */
-    Class<?> source() default NullType.class;
+    Class<?> source() default Void.class;
 
     /**
      * Parameter values returned by a method within the test class. This way you

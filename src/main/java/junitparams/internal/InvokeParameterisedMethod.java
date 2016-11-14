@@ -1,7 +1,5 @@
 package junitparams.internal;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -20,14 +18,14 @@ import junitparams.converters.ParamConverter;
  *
  * @author Pawel Lipinski
  */
-class InvokeParameterisedMethod extends Statement {
+public class InvokeParameterisedMethod extends Statement {
 
     private final Object[] params;
     private final FrameworkMethod testMethod;
     private final Object testClass;
     private final String uniqueMethodId;
 
-    InvokeParameterisedMethod(FrameworkMethod testMethod, Object testClass, Object params, int paramSetIdx) {
+    public InvokeParameterisedMethod(FrameworkMethod testMethod, Object testClass, Object params, int paramSetIdx) {
         this.testMethod = testMethod;
         this.testClass = testClass;
         this.uniqueMethodId = Utils.uniqueMethodId(paramSetIdx - 1, params, testMethod.getName());
@@ -208,11 +206,6 @@ class InvokeParameterisedMethod extends Statement {
             return Byte.parseByte((String) object);
         if (clazz.isAssignableFrom(BigDecimal.class))
             return new BigDecimal((String) object);
-        PropertyEditor editor = PropertyEditorManager.findEditor(clazz);
-        if (editor != null) {
-            editor.setAsText((String) object);
-            return editor.getValue();
-        }
         throw new IllegalArgumentException("Parameter type (" + clazz.getName() + ") cannot be handled!" +
                 " Only primitive types, BigDecimals and Strings can be used.");
     }
@@ -226,7 +219,13 @@ class InvokeParameterisedMethod extends Statement {
     }
 
     boolean matchesDescription(Description description) {
-        return description.hashCode() == uniqueMethodId.hashCode();
+        // TODO(JUnit4.10) - because JUnit 4.10 has no separation of display name and unique method
+        // id, we need to do some mangling of the name to get a match
+        String displayName = description.getDisplayName();
+
+        int endIndex = displayName.lastIndexOf("(", displayName.length() - 1);
+        String uniqueName = (endIndex == - 1) ? displayName : displayName.substring(0, endIndex);
+        return uniqueName.equals(uniqueMethodId);
     }
 
     @Override

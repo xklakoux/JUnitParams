@@ -42,8 +42,14 @@ public class ParametersReaderProvidersTest {
     }
 
     private TestMethod getTestMethodWithInvalidProvider() {
-        Method testMethod = TestClassWithProviderClassWithNoValidMethods.class.getMethods()[0];
-        return new TestMethod(new FrameworkMethod(testMethod), new TestClass(TestClassWithProviderClassWithNoValidMethods.class));
+        // Bug in original code relied on order of Class.getMethods() which is undefined.
+        try {
+            Method testMethod = TestClassWithProviderClassWithNoValidMethods.class
+                    .getDeclaredMethod("shouldDoNothingItsJustToConnectTestClassWithProvider");
+            return new TestMethod(new FrameworkMethod(testMethod), new TestClass(TestClassWithProviderClassWithNoValidMethods.class));
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("Mismatch between method and test class", e);
+        }
     }
 
     @RunWith(JUnitParamsRunner.class)

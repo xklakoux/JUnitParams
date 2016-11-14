@@ -1,24 +1,20 @@
 package junitparams.internal.parameters;
 
-import javax.lang.model.type.NullType;
-import java.lang.reflect.InvocationTargetException;
+import junitparams.Parameters;
+import org.junit.runners.model.FrameworkMethod;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.runners.model.FrameworkMethod;
-
-import junitparams.Parameters;
-import junitparams.internal.parameters.toarray.ParamsToArrayConverter;
-
 class ParametersFromExternalClassProvideMethod implements ParametrizationStrategy {
-    private final FrameworkMethod frameworkMethod;
-    private final Parameters annotation;
+    private final ParamsFromMethodCommon paramsFromMethodCommon;
+    private Parameters annotation;
 
     ParametersFromExternalClassProvideMethod(FrameworkMethod frameworkMethod) {
-        this.frameworkMethod = frameworkMethod;
+        this.paramsFromMethodCommon = new ParamsFromMethodCommon(frameworkMethod);
         annotation = frameworkMethod.getAnnotation(Parameters.class);
     }
 
@@ -31,7 +27,7 @@ class ParametersFromExternalClassProvideMethod implements ParametrizationStrateg
     @Override
     public boolean isApplicable() {
         return annotation != null
-                && !annotation.source().isAssignableFrom(NullType.class)
+                && !annotation.source().isAssignableFrom(Void.class)
                 && annotation.method().isEmpty();
     }
 
@@ -70,7 +66,8 @@ class ParametersFromExternalClassProvideMethod implements ParametrizationStrateg
                             " is not declared as static. Change it to a static method.");
                 }
                 try {
-                    result.addAll(getDataFromMethod(prividerMethod));
+                    result.addAll(
+                            Arrays.asList(paramsFromMethodCommon.getDataFromMethod(prividerMethod)));
                 } catch (Exception e) {
                     throw new RuntimeException("Cannot invoke parameters source method: " + prividerMethod.getName(),
                             e);
@@ -78,11 +75,5 @@ class ParametersFromExternalClassProvideMethod implements ParametrizationStrateg
             }
         }
         return result;
-    }
-
-    private List<Object> getDataFromMethod(Method prividerMethod) throws IllegalAccessException, InvocationTargetException {
-        Object result = prividerMethod.invoke(null);
-        Object[] resultsArray = new ParamsToArrayConverter(frameworkMethod).convert(result);
-        return Arrays.asList(resultsArray);
     }
 }

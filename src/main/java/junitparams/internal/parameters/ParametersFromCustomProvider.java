@@ -6,11 +6,11 @@ import junitparams.custom.ParametersProvider;
 import junitparams.internal.annotation.CustomParametersDescriptor;
 import junitparams.internal.annotation.FrameworkMethodAnnotations;
 
-class ParametersFromCustomProvider implements ParametrizationStrategy {
+public class ParametersFromCustomProvider implements ParametrizationStrategy {
 
     private final FrameworkMethodAnnotations frameworkMethodAnnotations;
 
-    ParametersFromCustomProvider(FrameworkMethod frameworkMethod) {
+    public ParametersFromCustomProvider(FrameworkMethod frameworkMethod) {
         frameworkMethodAnnotations = new FrameworkMethodAnnotations(frameworkMethod);
     }
 

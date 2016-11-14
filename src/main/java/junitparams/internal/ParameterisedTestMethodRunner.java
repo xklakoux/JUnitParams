@@ -22,11 +22,11 @@ public class ParameterisedTestMethodRunner {
         this.method = testMethod;
     }
 
-    private int nextCount() {
+    public int nextCount() {
         return count++;
     }
 
-    int count() {
+    public int count() {
         return count;
     }
 

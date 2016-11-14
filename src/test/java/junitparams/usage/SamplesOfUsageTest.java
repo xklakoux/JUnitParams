@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -81,16 +82,6 @@ public class SamplesOfUsageTest {
     private Iterator<String> parametersForParamsInIterator() { return Arrays.asList("a").iterator(); }
 
     @Test
-    @Parameters
-    public void paramsInIterableOfIterables(String p1, String p2) { }
-    private List<List<String>> parametersForParamsInIterableOfIterables() {
-        return Arrays.asList(
-                    Arrays.asList("s01e01", "s01e02"),
-                    Arrays.asList("s02e01", "s02e02")
-                );
-    }
-
-    @Test
     @Parameters({"SOME_VALUE", "OTHER_VALUE"})
     public void enumsAsParamInAnnotation(PersonType person) { }
 
@@ -111,10 +102,12 @@ public class SamplesOfUsageTest {
         return new Object[]{new Object[]{"first", 1}, new Object[]{"second", 2}};
     }
 
+    @Ignore("does not work when run on device as it does not have access to the file")
     @Test
     @FileParameters("src/test/resources/test.csv")
     public void loadParamsFromCsv(int age, String name) { }
 
+    @Ignore("does not work when run on device as it does not have access to the file")
     @Test
     @FileParameters(value = "src/test/resources/test.csv", mapper = PersonMapper.class)
     public void loadParamsFromAnyFile(PersonTest.Person person) { }

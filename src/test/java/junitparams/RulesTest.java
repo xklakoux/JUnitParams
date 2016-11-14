@@ -47,7 +47,8 @@ public class RulesTest {
                 .hasMessage("The @Rule 'testRule' must be public.");
     }
 
-    public class ProtectedRuleTest {
+    // TODO(JUnit4.10) - must be static in JUnit 4.10
+    public static class ProtectedRuleTest {
         @Rule
         TestRule testRule;
 

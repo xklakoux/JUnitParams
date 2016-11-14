@@ -22,7 +22,7 @@ import junitparams.naming.TestCaseNamingStrategy;
  */
 public class TestMethod {
     private FrameworkMethod frameworkMethod;
-    private FrameworkMethodAnnotations frameworkMethodAnnotations;
+    FrameworkMethodAnnotations frameworkMethodAnnotations;
     private Class<?> testClass;
     private ParametersReader parametersReader;
     private Object[] cachedParameters;
@@ -41,7 +41,7 @@ public class TestMethod {
         return frameworkMethod.getName();
     }
 
-    static List<TestMethod> listFrom(List<FrameworkMethod> annotatedMethods, TestClass testClass) {
+    public static List<TestMethod> listFrom(List<FrameworkMethod> annotatedMethods, TestClass testClass) {
         List<TestMethod> methods = new ArrayList<TestMethod>();
 
         for (FrameworkMethod frameworkMethod : annotatedMethods)
@@ -72,7 +72,7 @@ public class TestMethod {
         return Arrays.equals(frameworkMethodParameterTypes, testMethodParameterTypes);
     }
 
-    private Class<?> testClass() {
+    Class<?> testClass() {
         return testClass;
     }
 
@@ -103,10 +103,13 @@ public class TestMethod {
             for (int i = 0; i < params.length; i++) {
                 Object paramSet = params[i];
                 String name = namingStrategy.getTestCaseName(i, paramSet);
-                String uniqueMethodId = Utils.uniqueMethodId(i, paramSet, name());
-
+                // TODO(JUnit4.10) - Description.createTestDescription(Class, String, Serializable)
+                // is not available in JUnit 4.10. That means that it is not possible to
+                // differentiate between tests using a unique method id. Just use the name for now.
+                // There is a corresponding change in
+                // InvokeParameterisedMethod.matchesDescription(Description description).
                 parametrised.addChild(
-                        Description.createTestDescription(testClass().getName(), name, uniqueMethodId)
+                        Description.createTestDescription(testClass(), name)
                 );
             }
             return parametrised;

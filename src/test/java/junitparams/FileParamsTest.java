@@ -1,5 +1,6 @@
 package junitparams;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -12,12 +13,14 @@ import static org.assertj.core.api.Assertions.*;
 @RunWith(JUnitParamsRunner.class)
 public class FileParamsTest {
 
+    @Ignore("Does not work when run on device as it does not have access to the file")
     @Test
     @FileParameters("src/test/resources/test.csv")
     public void loadParamsFromFileWithIdentityMapper(int age, String name) {
         assertThat(age).isGreaterThan(0);
     }
 
+    @Ignore("Does not work when run on device as it does not have access to the file")
     @Test
     @FileParameters(value = "src/test/resources/test.csv", mapper = PersonMapper.class)
     public void loadParamsFromFileWithCustomMapper(Person person) {
@@ -30,6 +33,7 @@ public class FileParamsTest {
         assertThat(age).isGreaterThan(0);
     }
 
+    @Ignore("Does not work when run on device as it does not have access to the file")
     @Test
     @FileParameters("file:src/test/resources/test.csv")
     public void loadParamsFromFileAtFilesystem(int age, String name) {

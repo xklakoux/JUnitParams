@@ -16,6 +16,8 @@ import junitparams.internal.ParameterisedTestClassRunner;
 import junitparams.internal.ParametrizedTestMethodsFilter;
 import junitparams.internal.TestMethod;
 
+import static org.junit.internal.runners.rules.*;
+
 /**
  * <h1>JUnitParams</h1><br>
  * <p>
@@ -402,7 +404,8 @@ public class JUnitParamsRunner extends BlockJUnit4ClassRunner {
 
     @Override
     protected void collectInitializationErrors(List<Throwable> errors) {
-        super.validateFields(errors);
+        // TODO(JUnit4.10) - super.validateFields() is private in JUnit 4.10 - so inline method
+        RULE_VALIDATOR.validate(getTestClass(), errors);
         for (Throwable throwable : errors)
             throwable.printStackTrace();
     }
